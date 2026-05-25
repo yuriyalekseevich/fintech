@@ -1,0 +1,14 @@
+{
+  "Simulator Target Bundle": "com.example.fintech",
+  "aps": {
+    "alert": {
+      "title": "Новая транзакция",
+      "body": "Перевод на сумму 219,850 €"
+    },
+    "badge": 1,
+    "sound": "default",
+    "category": "TRANSACTION_ACTION"
+  },
+  "ticket_id": "219850",
+  "click_action": "/transactions/219850"
+}

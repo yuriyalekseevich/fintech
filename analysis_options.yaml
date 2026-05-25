@@ -1,0 +1,29 @@
+# Fintech — strict static analysis. No implicit dynamic where inference can apply.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    # Treat inference/cast issues as build-breaking in CI.
+    inference_failure_on_function_return_type: error
+    inference_failure_on_instance_creation: error
+    inference_failure_on_uninitialized_variable: error
+    invalid_assignment: error
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.config.dart"
+
+linter:
+  rules:
+    always_declare_return_types: true
+    avoid_dynamic_calls: true
+    prefer_final_fields: true
+    prefer_final_locals: true
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    type_annotate_public_apis: true
+    unnecessary_late: true
