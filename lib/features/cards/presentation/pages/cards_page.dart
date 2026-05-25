@@ -1,11 +1,13 @@
 import 'package:fintech/core/di/injection.dart';
 import 'package:fintech/core/presentation/widgets/async_state_view.dart';
+import 'package:fintech/core/router/app_routes.dart';
 import 'package:fintech/features/cards/presentation/bloc/cards_bloc.dart';
 import 'package:fintech/features/cards/presentation/bloc/cards_event.dart';
 import 'package:fintech/features/cards/presentation/bloc/cards_state.dart';
 import 'package:fintech/features/cards/presentation/widgets/card_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class CardsPage extends StatelessWidget {
   const CardsPage({super.key});
@@ -26,6 +28,17 @@ class CardsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Cards')),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          final bool? changed =
+              await context.push<bool>(AppRoutes.addCard);
+          if (changed == true && context.mounted) {
+            context.read<CardsBloc>().add(const CardsRefreshRequested());
+          }
+        },
+        icon: const Icon(Icons.add),
+        label: const Text('Add card'),
+      ),
       body: BlocBuilder<CardsBloc, CardsState>(
         builder: (BuildContext context, CardsState state) {
           return RefreshIndicator(

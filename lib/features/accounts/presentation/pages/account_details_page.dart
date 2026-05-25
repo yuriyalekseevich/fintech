@@ -1,6 +1,7 @@
 import 'package:fintech/core/di/injection.dart';
 import 'package:fintech/core/presentation/formatters/currency_formatter.dart';
 import 'package:fintech/core/presentation/widgets/async_state_view.dart';
+import 'package:fintech/core/presentation/widgets/confirm_delete_dialog.dart';
 import 'package:fintech/features/accounts/presentation/bloc/account_details_bloc.dart';
 import 'package:fintech/features/accounts/presentation/bloc/account_details_event.dart';
 import 'package:fintech/features/accounts/presentation/bloc/account_details_state.dart';
@@ -25,14 +26,48 @@ class AccountDetailsPage extends StatelessWidget {
 class AccountDetailsView extends StatelessWidget {
   const AccountDetailsView({super.key});
 
+  Future<void> _confirmDelete(BuildContext context) async {
+    final bool confirmed = await showConfirmDeleteDialog(
+      context: context,
+      title: 'Remove account?',
+      message: 'This account will be permanently removed.',
+    );
+    if (confirmed && context.mounted) {
+      context
+          .read<AccountDetailsBloc>()
+          .add(const AccountDetailsDeleteRequested());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Account details')),
-      body: BlocBuilder<AccountDetailsBloc, AccountDetailsState>(
+    return BlocListener<AccountDetailsBloc, AccountDetailsState>(
+      listener: (BuildContext context, AccountDetailsState state) {
+        if (state is AccountDetailsDeleted) {
+          Navigator.of(context).pop(true);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Account details'),
+          actions: <Widget>[
+            BlocBuilder<AccountDetailsBloc, AccountDetailsState>(
+              builder: (BuildContext context, AccountDetailsState state) {
+                final bool canDelete = state is AccountDetailsLoaded;
+                return IconButton(
+                  onPressed: canDelete ? () => _confirmDelete(context) : null,
+                  icon: const Icon(Icons.delete_outline),
+                  tooltip: 'Remove account',
+                );
+              },
+            ),
+          ],
+        ),
+        body: BlocBuilder<AccountDetailsBloc, AccountDetailsState>(
         builder: (BuildContext context, AccountDetailsState state) {
           return AsyncStateView(
-            isLoading: state is AccountDetailsLoading,
+            isLoading: state is AccountDetailsLoading ||
+                state is AccountDetailsDeleting,
             failure: switch (state) {
               AccountDetailsError(:final failure) => failure,
               _ => null,
@@ -71,6 +106,7 @@ class AccountDetailsView extends StatelessWidget {
             },
           );
         },
+      ),
       ),
     );
   }

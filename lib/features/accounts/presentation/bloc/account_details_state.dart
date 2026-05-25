@@ -24,3 +24,11 @@ final class AccountDetailsError extends AccountDetailsState {
 
   final Failure failure;
 }
+
+final class AccountDetailsDeleting extends AccountDetailsState {
+  const AccountDetailsDeleting();
+}
+
+final class AccountDetailsDeleted extends AccountDetailsState {
+  const AccountDetailsDeleted();
+}

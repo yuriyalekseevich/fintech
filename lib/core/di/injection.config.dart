@@ -16,6 +16,10 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../../features/accounts/domain/repositories/accounts_repository.dart'
     as _i581;
+import '../../features/accounts/domain/usecases/create_account_usecase.dart'
+    as _i902;
+import '../../features/accounts/domain/usecases/delete_account_usecase.dart'
+    as _i903;
 import '../../features/accounts/domain/usecases/get_account_details_usecase.dart'
     as _i155;
 import '../../features/accounts/domain/usecases/get_accounts_usecase.dart'
@@ -27,6 +31,8 @@ import '../../features/accounts/infrastructure/repositories/accounts_repository_
 import '../../features/accounts/presentation/bloc/account_details_bloc.dart'
     as _i126;
 import '../../features/accounts/presentation/bloc/accounts_bloc.dart' as _i103;
+import '../../features/accounts/presentation/bloc/add_account_bloc.dart'
+    as _i904;
 import '../../features/auth/domain/repositories/auth_repository.dart' as _i787;
 import '../../features/auth/domain/usecases/login_usecase.dart' as _i188;
 import '../../features/auth/domain/usecases/logout_usecase.dart' as _i48;
@@ -37,6 +43,10 @@ import '../../features/auth/infrastructure/repositories/auth_repository_impl.dar
 import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i797;
 import '../../features/cards/domain/repositories/cards_repository.dart'
     as _i314;
+import '../../features/cards/domain/usecases/create_card_usecase.dart'
+    as _i905;
+import '../../features/cards/domain/usecases/delete_card_usecase.dart'
+    as _i906;
 import '../../features/cards/domain/usecases/get_card_details_usecase.dart'
     as _i348;
 import '../../features/cards/domain/usecases/get_cards_usecase.dart' as _i630;
@@ -44,6 +54,7 @@ import '../../features/cards/infrastructure/datasources/cards_remote_data_source
     as _i845;
 import '../../features/cards/infrastructure/repositories/cards_repository_impl.dart'
     as _i763;
+import '../../features/cards/presentation/bloc/add_card_bloc.dart' as _i907;
 import '../../features/cards/presentation/bloc/card_details_bloc.dart' as _i465;
 import '../../features/cards/presentation/bloc/cards_bloc.dart' as _i981;
 import '../../features/dashboard/domain/repositories/dashboard_repository.dart'
@@ -259,6 +270,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i297.GetAccountsUseCase>(
       () => _i297.GetAccountsUseCase(gh<_i581.AccountsRepository>()),
     );
+    gh.lazySingleton<_i902.CreateAccountUseCase>(
+      () => _i902.CreateAccountUseCase(gh<_i581.AccountsRepository>()),
+    );
+    gh.lazySingleton<_i903.DeleteAccountUseCase>(
+      () => _i903.DeleteAccountUseCase(gh<_i581.AccountsRepository>()),
+    );
     gh.lazySingleton<_i188.LoginUseCase>(
       () => _i188.LoginUseCase(gh<_i787.AuthRepository>()),
     );
@@ -271,17 +288,27 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factoryParam<_i126.AccountDetailsBloc, String, dynamic>(
       (_accountId, _) => _i126.AccountDetailsBloc(
         gh<_i155.GetAccountDetailsUseCase>(),
+        gh<_i903.DeleteAccountUseCase>(),
         _accountId,
       ),
     );
     gh.factory<_i103.AccountsBloc>(
       () => _i103.AccountsBloc(gh<_i297.GetAccountsUseCase>()),
     );
+    gh.factory<_i904.AddAccountBloc>(
+      () => _i904.AddAccountBloc(gh<_i902.CreateAccountUseCase>()),
+    );
     gh.lazySingleton<_i348.GetCardDetailsUseCase>(
       () => _i348.GetCardDetailsUseCase(gh<_i314.CardsRepository>()),
     );
     gh.lazySingleton<_i630.GetCardsUseCase>(
       () => _i630.GetCardsUseCase(gh<_i314.CardsRepository>()),
+    );
+    gh.lazySingleton<_i905.CreateCardUseCase>(
+      () => _i905.CreateCardUseCase(gh<_i314.CardsRepository>()),
+    );
+    gh.lazySingleton<_i906.DeleteCardUseCase>(
+      () => _i906.DeleteCardUseCase(gh<_i314.CardsRepository>()),
     );
     gh.factory<_i652.DashboardBloc>(
       () => _i652.DashboardBloc(gh<_i803.GetDashboardUseCase>()),
@@ -303,9 +330,15 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i981.CardsBloc>(
       () => _i981.CardsBloc(gh<_i630.GetCardsUseCase>()),
     );
+    gh.factory<_i907.AddCardBloc>(
+      () => _i907.AddCardBloc(gh<_i905.CreateCardUseCase>()),
+    );
     gh.factoryParam<_i465.CardDetailsBloc, String, dynamic>(
-      (_cardId, _) =>
-          _i465.CardDetailsBloc(gh<_i348.GetCardDetailsUseCase>(), _cardId),
+      (_cardId, _) => _i465.CardDetailsBloc(
+        gh<_i348.GetCardDetailsUseCase>(),
+        gh<_i906.DeleteCardUseCase>(),
+        _cardId,
+      ),
     );
     return this;
   }

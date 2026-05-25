@@ -5,9 +5,11 @@ import 'package:fintech/core/network/dio_failure_mapper.dart';
 import 'package:fintech/features/accounts/domain/entities/account.dart';
 import 'package:fintech/features/accounts/domain/entities/account_details.dart';
 import 'package:fintech/features/accounts/domain/repositories/accounts_repository.dart';
+import 'package:fintech/features/accounts/domain/requests/create_account_request.dart';
 import 'package:fintech/features/accounts/infrastructure/datasources/accounts_remote_data_source.dart';
 import 'package:fintech/features/accounts/infrastructure/dtos/account_details_dto.dart';
 import 'package:fintech/features/accounts/infrastructure/dtos/accounts_response_dto.dart';
+import 'package:fintech/features/accounts/infrastructure/dtos/create_account_request_dto.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: AccountsRepository)
@@ -46,6 +48,39 @@ class AccountsRepositoryImpl implements AccountsRepository {
       return Error<AccountDetails>(
         UnexpectedFailure(
           message: 'Failed to load account details',
+          cause: error,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<Account>> createAccount(CreateAccountRequest request) async {
+    try {
+      final AccountDto dto = await _remoteDataSource.createAccount(
+        CreateAccountRequestDto.fromDomain(request),
+      );
+      return Success<Account>(dto.toDomain());
+    } on DioException catch (error) {
+      return Error<Account>(DioFailureMapper.map(error));
+    } on Object catch (error) {
+      return Error<Account>(
+        UnexpectedFailure(message: 'Failed to create account', cause: error),
+      );
+    }
+  }
+
+  @override
+  Future<Result<void>> deleteAccount({required String accountId}) async {
+    try {
+      await _remoteDataSource.deleteAccount(accountId: accountId);
+      return const Success<void>(null);
+    } on DioException catch (error) {
+      return Error<void>(DioFailureMapper.map(error));
+    } on Object catch (error) {
+      return Error<void>(
+        UnexpectedFailure(
+          message: 'Failed to delete account',
           cause: error,
         ),
       );

@@ -8,7 +8,9 @@ import 'package:fintech/core/router/router_page_transitions.dart';
 import 'package:fintech/core/router/app_routes.dart';
 import 'package:fintech/features/accounts/presentation/pages/account_details_page.dart';
 import 'package:fintech/features/accounts/presentation/pages/accounts_page.dart';
+import 'package:fintech/features/accounts/presentation/pages/add_account_page.dart';
 import 'package:fintech/features/auth/presentation/pages/login_page.dart';
+import 'package:fintech/features/cards/presentation/pages/add_card_page.dart';
 import 'package:fintech/features/cards/presentation/pages/card_details_page.dart';
 import 'package:fintech/features/cards/presentation/pages/cards_page.dart';
 import 'package:fintech/features/dashboard/presentation/pages/dashboard_page.dart';
@@ -104,6 +106,13 @@ class AppRouter {
                 },
                 routes: <RouteBase>[
                   GoRoute(
+                    path: 'add',
+                    name: 'addCard',
+                    builder: (BuildContext context, GoRouterState state) {
+                      return const AddCardPage();
+                    },
+                  ),
+                  GoRoute(
                     path: ':${AppRoutes.cardDetailsParam}',
                     name: 'cardDetails',
                     builder: (BuildContext context, GoRouterState state) {
@@ -132,6 +141,13 @@ class AppRouter {
                   return const AccountsPage();
                 },
                 routes: <RouteBase>[
+                  GoRoute(
+                    path: 'add',
+                    name: 'addAccount',
+                    builder: (BuildContext context, GoRouterState state) {
+                      return const AddAccountPage();
+                    },
+                  ),
                   GoRoute(
                     path: ':${AppRoutes.accountDetailsParam}',
                     name: 'accountDetails',

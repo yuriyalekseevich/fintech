@@ -24,3 +24,11 @@ final class CardDetailsError extends CardDetailsState {
 
   final Failure failure;
 }
+
+final class CardDetailsDeleting extends CardDetailsState {
+  const CardDetailsDeleting();
+}
+
+final class CardDetailsDeleted extends CardDetailsState {
+  const CardDetailsDeleted();
+}

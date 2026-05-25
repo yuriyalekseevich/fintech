@@ -7,9 +7,12 @@ abstract final class AppRoutes {
   static const String cards = '/cards';
   static const String cardDetailsParam = 'cardId';
 
+  static const String addCard = '/cards/add';
+
   static String cardDetails(String cardId) => '/cards/$cardId';
 
   static const String accounts = '/accounts';
+  static const String addAccount = '/accounts/add';
   static const String accountDetailsParam = 'accountId';
 
   static String accountDetails(String accountId) => '/accounts/$accountId';
