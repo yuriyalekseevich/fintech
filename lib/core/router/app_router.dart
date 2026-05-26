@@ -2,19 +2,14 @@ import 'package:fintech/core/deeplink/pending_deep_link_store.dart';
 import 'package:fintech/core/domain/auth/auth_session.dart';
 import 'package:fintech/core/presentation/pages/not_found_page.dart';
 import 'package:fintech/core/presentation/shell/main_shell.dart';
-import 'package:fintech/core/router/deep_link_security.dart';
-import 'package:fintech/core/router/route_analytics_observer.dart';
-import 'package:fintech/core/router/router_page_transitions.dart';
 import 'package:fintech/core/router/app_routes.dart';
-import 'package:fintech/features/accounts/presentation/pages/account_details_page.dart';
-import 'package:fintech/features/accounts/presentation/pages/accounts_page.dart';
-import 'package:fintech/features/auth/presentation/pages/login_page.dart';
-import 'package:fintech/features/cards/presentation/pages/card_details_page.dart';
-import 'package:fintech/features/cards/presentation/pages/cards_page.dart';
-import 'package:fintech/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:fintech/features/profile/presentation/pages/profile_page.dart';
-import 'package:fintech/features/transactions/presentation/pages/transaction_details_page.dart';
-import 'package:fintech/features/transactions/presentation/pages/transactions_page.dart';
+import 'package:fintech/core/router/fragments/account_routes.dart';
+import 'package:fintech/core/router/fragments/auth_routes.dart';
+import 'package:fintech/core/router/fragments/card_routes.dart';
+import 'package:fintech/core/router/fragments/dashboard_routes.dart';
+import 'package:fintech/core/router/fragments/profile_routes.dart';
+import 'package:fintech/core/router/fragments/transaction_routes.dart';
+import 'package:fintech/core/router/route_analytics_observer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -63,14 +58,7 @@ class AppRouter {
     },
     redirect: _redirect,
     routes: <RouteBase>[
-      GoRoute(
-        path: AppRoutes.login,
-        name: 'login',
-        parentNavigatorKey: rootNavigatorKey,
-        builder: (BuildContext context, GoRouterState state) {
-          return const LoginPage();
-        },
-      ),
+      AuthRoutes.login(parentNavigatorKey: rootNavigatorKey),
       StatefulShellRoute.indexedStack(
         parentNavigatorKey: rootNavigatorKey,
         builder: (
@@ -81,125 +69,13 @@ class AppRouter {
           return MainShell(navigationShell: navigationShell);
         },
         branches: <StatefulShellBranch>[
-          StatefulShellBranch(
-            navigatorKey: dashboardNavKey,
-            routes: <RouteBase>[
-              GoRoute(
-                path: AppRoutes.dashboard,
-                name: 'dashboard',
-                builder: (BuildContext context, GoRouterState state) {
-                  return const DashboardPage();
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: cardsNavKey,
-            routes: <RouteBase>[
-              GoRoute(
-                path: AppRoutes.cards,
-                name: 'cards',
-                builder: (BuildContext context, GoRouterState state) {
-                  return const CardsPage();
-                },
-                routes: <RouteBase>[
-                  GoRoute(
-                    path: ':${AppRoutes.cardDetailsParam}',
-                    name: 'cardDetails',
-                    builder: (BuildContext context, GoRouterState state) {
-                      final String? cardId =
-                          state.pathParameters[AppRoutes.cardDetailsParam];
-
-                      if (cardId == null ||
-                          !DeepLinkSecurity.isValidCardId(cardId)) {
-                        return const NotFoundPage();
-                      }
-
-                      return CardDetailsPage(cardId: cardId);
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: accountsNavKey,
-            routes: <RouteBase>[
-              GoRoute(
-                path: AppRoutes.accounts,
-                name: 'accounts',
-                builder: (BuildContext context, GoRouterState state) {
-                  return const AccountsPage();
-                },
-                routes: <RouteBase>[
-                  GoRoute(
-                    path: ':${AppRoutes.accountDetailsParam}',
-                    name: 'accountDetails',
-                    builder: (BuildContext context, GoRouterState state) {
-                      final String? accountId =
-                          state.pathParameters[AppRoutes.accountDetailsParam];
-
-                      if (accountId == null ||
-                          !DeepLinkSecurity.isValidAccountId(accountId)) {
-                        return const NotFoundPage();
-                      }
-
-                      return AccountDetailsPage(accountId: accountId);
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: profileNavKey,
-            routes: <RouteBase>[
-              GoRoute(
-                path: AppRoutes.profile,
-                name: 'profile',
-                builder: (BuildContext context, GoRouterState state) {
-                  return const ProfilePage();
-                },
-              ),
-            ],
-          ),
+          DashboardRoutes.branch(navigatorKey: dashboardNavKey),
+          CardRoutes.branch(navigatorKey: cardsNavKey),
+          AccountRoutes.branch(navigatorKey: accountsNavKey),
+          ProfileRoutes.branch(navigatorKey: profileNavKey),
         ],
       ),
-      GoRoute(
-        path: AppRoutes.transactions,
-        name: 'transactions',
-        parentNavigatorKey: rootNavigatorKey,
-        pageBuilder: (BuildContext context, GoRouterState state) {
-          return modalSlideUpPage(
-            state: state,
-            child: const TransactionsPage(),
-          );
-        },
-        routes: <RouteBase>[
-          GoRoute(
-            path: ':${AppRoutes.transactionDetailsParam}',
-            name: 'transactionDetails',
-            parentNavigatorKey: rootNavigatorKey,
-            pageBuilder: (BuildContext context, GoRouterState state) {
-              final String? transactionId =
-                  state.pathParameters[AppRoutes.transactionDetailsParam];
-
-              if (transactionId == null ||
-                  !DeepLinkSecurity.isValidTransactionId(transactionId)) {
-                return modalSlideUpPage(
-                  state: state,
-                  child: const NotFoundPage(),
-                );
-              }
-
-              return modalSlideUpPage(
-                state: state,
-                child: TransactionDetailsPage(transactionId: transactionId),
-              );
-            },
-          ),
-        ],
-      ),
+      TransactionRoutes.list(parentNavigatorKey: rootNavigatorKey),
     ],
   );
 

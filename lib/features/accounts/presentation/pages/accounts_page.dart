@@ -1,11 +1,13 @@
 import 'package:fintech/core/di/injection.dart';
 import 'package:fintech/core/presentation/widgets/async_state_view.dart';
+import 'package:fintech/core/router/app_routes.dart';
 import 'package:fintech/features/accounts/presentation/bloc/accounts_bloc.dart';
 import 'package:fintech/features/accounts/presentation/bloc/accounts_event.dart';
 import 'package:fintech/features/accounts/presentation/bloc/accounts_state.dart';
 import 'package:fintech/features/accounts/presentation/widgets/account_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class AccountsPage extends StatelessWidget {
   const AccountsPage({super.key});
@@ -26,6 +28,19 @@ class AccountsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Accounts')),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          final bool? changed =
+              await context.push<bool>(AppRoutes.addAccount);
+          if (changed == true && context.mounted) {
+            context
+                .read<AccountsBloc>()
+                .add(const AccountsRefreshRequested());
+          }
+        },
+        icon: const Icon(Icons.add),
+        label: const Text('Add account'),
+      ),
       body: BlocBuilder<AccountsBloc, AccountsState>(
         builder: (BuildContext context, AccountsState state) {
           return RefreshIndicator(
