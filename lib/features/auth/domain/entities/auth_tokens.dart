@@ -9,4 +9,8 @@ final class AuthTokens {
   final String accessToken;
   final String refreshToken;
   final int expiresIn;
+
+  @override
+  String toString() =>
+      'AuthTokens(accessToken: ***, refreshToken: ***, expiresIn: $expiresIn)';
 }

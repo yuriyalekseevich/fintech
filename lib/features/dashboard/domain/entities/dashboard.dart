@@ -10,4 +10,9 @@ final class Dashboard {
   final double balance;
   final String currency;
   final List<Transaction> recentTransactions;
+
+  @override
+  String toString() =>
+      'Dashboard(balance: $balance, currency: $currency, '
+      'recentTransactions: $recentTransactions)';
 }

@@ -11,4 +11,8 @@ final class TransactionSummary {
   final String title;
   final double amount;
   final String date;
+
+  @override
+  String toString() =>
+      'TransactionSummary(id: $id, title: $title, amount: $amount, date: $date)';
 }

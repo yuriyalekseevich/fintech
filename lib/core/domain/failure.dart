@@ -18,6 +18,10 @@ final class NetworkFailure extends Failure {
   final String message;
 
   final int? statusCode;
+
+  @override
+  String toString() =>
+      'NetworkFailure(message: $message, statusCode: $statusCode)';
 }
 
 final class StorageFailure extends Failure {
@@ -27,6 +31,9 @@ final class StorageFailure extends Failure {
   final String message;
 
   final Object? cause;
+
+  @override
+  String toString() => 'StorageFailure(message: $message, cause: $cause)';
 }
 
 final class AuthFailure extends Failure {
@@ -34,6 +41,9 @@ final class AuthFailure extends Failure {
 
   @override
   final String message;
+
+  @override
+  String toString() => 'AuthFailure(message: $message)';
 }
 
 final class UnexpectedFailure extends Failure {
@@ -43,6 +53,10 @@ final class UnexpectedFailure extends Failure {
   final String message;
 
   final Object? cause;
+
+  @override
+  String toString() =>
+      'UnexpectedFailure(message: $message, cause: $cause)';
 }
 
 /// Failure when domain request validation fails before calling the API.
@@ -57,4 +71,8 @@ final class ValidationFailure extends Failure {
 
   /// Keys match form field identifiers (e.g. `cardNumber`, `currency`).
   final Map<String, String> fieldErrors;
+
+  @override
+  String toString() =>
+      'ValidationFailure(message: $message, fieldErrors: $fieldErrors)';
 }

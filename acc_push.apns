@@ -7,8 +7,8 @@
     },
     "badge": 1,
     "sound": "default",
-    "category": "TRANSACTION_ACTION"
+    "category": "ACCOUNT_ACTION"
   },
-  "ticket_id": "219850",
-  "click_action": "/transactions/219850"
+  "account_id": "acc-usd",
+  "click_action": "/accounts/acc-usd"
 }
