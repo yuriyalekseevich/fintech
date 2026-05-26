@@ -10,4 +10,8 @@ final class Account {
   final String name;
   final double balance;
   final String currency;
+
+  @override
+  String toString() =>
+      'Account(id: $id, name: $name, balance: $balance, currency: $currency)';
 }

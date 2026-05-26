@@ -1,3 +1,4 @@
+import 'package:fintech/core/bloc/app_bloc_observer.dart';
 import 'package:fintech/core/deeplink/deep_link_coordinator.dart';
 import 'package:fintech/core/deeplink/deep_link_listener.dart';
 import 'package:fintech/core/di/injection.dart';
@@ -7,14 +8,19 @@ import 'package:fintech/core/infrastructure/notifications/notification_service.d
 import 'package:fintech/core/presentation/app.dart';
 import 'package:fintech/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:fintech/features/auth/presentation/bloc/auth_event.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  if (kDebugMode) {
+    Bloc.observer = const AppBlocObserver();
+  }
+
   await configureDependencies();
 
-  // Push channel handler must be registered before native forwards tap events.
   await getIt<NotificationService>().initialize();
 
   await _restoreSession();

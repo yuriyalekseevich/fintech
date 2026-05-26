@@ -10,4 +10,8 @@ final class BankCard {
   final String last4;
   final String brand;
   final String type;
+
+  @override
+  String toString() =>
+      'BankCard(id: $id, last4: $last4, brand: $brand, type: $type)';
 }

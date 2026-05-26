@@ -12,4 +12,9 @@ final class UserProfile {
   final String fullName;
   final String email;
   final List<TransactionSummary> recentTransactions;
+
+  @override
+  String toString() =>
+      'UserProfile(id: $id, fullName: $fullName, email: $email, '
+      'recentTransactions: $recentTransactions)';
 }

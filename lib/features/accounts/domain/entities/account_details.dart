@@ -17,4 +17,9 @@ final class AccountDetails {
   final String iban;
   final String accountType;
   final String status;
+
+  @override
+  String toString() =>
+      'AccountDetails(id: $id, name: $name, balance: $balance, currency: $currency, '
+      'iban: $iban, accountType: $accountType, status: $status)';
 }

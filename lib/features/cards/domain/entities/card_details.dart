@@ -21,4 +21,10 @@ final class CardDetails {
   final String status;
   final double dailyLimit;
   final String currency;
+
+  @override
+  String toString() =>
+      'CardDetails(id: $id, last4: $last4, brand: $brand, type: $type, '
+      'holderName: $holderName, expiryDate: $expiryDate, status: $status, '
+      'dailyLimit: $dailyLimit, currency: $currency)';
 }

@@ -23,4 +23,10 @@ final class TransactionDetails {
   final String merchant;
   final String reference;
   final String description;
+
+  @override
+  String toString() =>
+      'TransactionDetails(id: $id, title: $title, amount: $amount, '
+      'currency: $currency, date: $date, category: $category, status: $status, '
+      'merchant: $merchant, reference: $reference, description: $description)';
 }

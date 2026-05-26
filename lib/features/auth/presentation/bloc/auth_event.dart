@@ -10,6 +10,10 @@ final class AuthLoginSubmitted extends AuthEvent {
 
   final String email;
   final String password;
+
+  @override
+  String toString() =>
+      'AuthLoginSubmitted(email: $email, password: ***redacted***)';
 }
 
 final class AuthSessionRestored extends AuthEvent {
